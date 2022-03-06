@@ -34,11 +34,14 @@ jobs:
           SSH_KEY: ${{ secrets.SSH_KEY }}
           SSH_HOST: ${{ secrets.SSH_HOST }}
 
-      - name: debug key
-        run: cat ~/.ssh/prod.key
+      - name: setup ssh passphras
+        run: ssh-add - <<< "${{ secrets.SSH_PASS }}"
 
-      - name: debug config
-        run: cat ~/.ssh/config
+      # - name: debug key
+      #   run: cat ~/.ssh/prod.key
+
+      # - name: debug config
+      #   run: cat ~/.ssh/config
 
       - name: ssh into server
         run: ssh prod
