@@ -17,6 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Configure SSH
+        enviroment: production
         run: |
           mkdir -p ~/.ssh/
           echo "$SSH_KEY" > ~/.ssh/prod.key
