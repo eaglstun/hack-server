@@ -34,8 +34,13 @@ jobs:
           SSH_KEY: ${{ secrets.SSH_KEY }}
           SSH_HOST: ${{ secrets.SSH_HOST }}
 
-      - name: setup ssh passphras
-        run: ssh-add - <<< "${{ secrets.SSH_PASS }}"
+      - name: setup ssh passphrase
+        run: |
+          ssh-agent -a $SSH_AUTH_SOCK > /dev/null
+          ssh-add - <<< "$SSH_PASS"
+        env:
+          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+          SSH_PASS: ${{ secrets.SSH_PASS }}
 
       # - name: debug key
       #   run: cat ~/.ssh/prod.key
