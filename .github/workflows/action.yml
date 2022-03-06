@@ -35,6 +35,4 @@ jobs:
           SSH_HOST: ${{ secrets.SSH_HOST }}
 
       - name: ssh into server and create test directoy
-        run: |
-          ssh prod
-          touch hello.txt
+        run: ssh prod 'touch hello.txt'
