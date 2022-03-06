@@ -34,5 +34,11 @@ jobs:
           SSH_KEY: ${{ secrets.SSH_KEY }}
           SSH_HOST: ${{ secrets.SSH_HOST }}
 
-      - name: ssh into server and create test directoy
-        run: ssh prod 'touch hello.txt'
+      - name: debug key
+        run: cat ~/.ssh/prod.key
+
+      - name: debug config
+        run: cat ~/.ssh/config
+
+      # - name: ssh into server and create test directoy
+      #   run: ssh prod 'touch hello.txt'
