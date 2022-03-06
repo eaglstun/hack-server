@@ -38,7 +38,7 @@ jobs:
         run: |
           ssh-agent -a $SSH_AUTH_SOCK > /dev/null
           echo 'echo $SSH_PASS' > ~/.ssh_askpass && chmod +x ~/.ssh_askpass
-          echo "Running ssh-add" | SSH_ASKPASS=~/.ssh_askpass DISPLAY= ssh-add prod.key
+          echo "Running ssh-add" | SSH_ASKPASS=~/.ssh_askpass DISPLAY= ssh-add ~/.ssh/prod.key
         env:
           SSH_AUTH_SOCK: /tmp/ssh_agent.sock
           SSH_PASS: ${{ secrets.SSH_PASS }}
