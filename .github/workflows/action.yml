@@ -35,7 +35,4 @@ jobs:
 
       - name: ssh into server and create test directoy
         run: |
-          ssh prod
-          mkdir test
-          cd test
-          touch hello.txt
+          cat ~/.ssh/config
