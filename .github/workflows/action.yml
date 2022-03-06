@@ -1,0 +1,48 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push, only for the main branch
+  push:
+    branches: [main]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$SSH_KEY" > ~/.ssh/prod.key
+          chmod 600 ~/.ssh/prod.key
+          cat >>~/.ssh/config <<END
+          Host prod
+            HostName $SSH_HOST
+            User $SSH_USERNAME
+            IdentityFile ~/.ssh/prod.key
+            StrictHostKeyChecking no
+            AddKeysToAgent yes
+          END
+        env:
+          SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+
+      - name: Setup SSH passphrase, clone repo and install
+        run: |
+          ssh-agent -a $SSH_AUTH_SOCK > /dev/null
+          echo 'echo $SSH_PASS' > ~/.ssh_askpass && chmod +x ~/.ssh_askpass
+          echo "Running ssh-add" | SSH_ASKPASS=~/.ssh_askpass DISPLAY= ssh-add ~/.ssh/prod.key
+          ssh prod 'groups'
+          ssh prod 'cd /var/www/srv/hack && git fetch && git reset --hard origin/main'
+          ssh prod 'cd /var/www/srv/hack && composer install'
+        env:
+          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+          SSH_PASS: ${{ secrets.SSH_PASS }}
