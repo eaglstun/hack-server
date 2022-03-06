@@ -28,6 +28,7 @@ jobs:
             User $SSH_USERNAME
             IdentityFile ~/.ssh/prod.key
             StrictHostKeyChecking no
+            AddKeysToAgent yes
           END
         env:
           SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
@@ -40,7 +41,7 @@ jobs:
           echo 'echo $SSH_PASS' > ~/.ssh_askpass && chmod +x ~/.ssh_askpass
           echo "Running ssh-add" | SSH_ASKPASS=~/.ssh_askpass DISPLAY= ssh-add ~/.ssh/prod.key
           ssh prod 'groups'
-          # ssh prod 'cd /var/www/srv/test && git clone git@github.com:eaglstun/hack-server.git'
+          ssh prod 'cd /var/www/srv/test && git clone git@github.com:eaglstun/hack-server.git'
         env:
           SSH_AUTH_SOCK: /tmp/ssh_agent.sock
           SSH_PASS: ${{ secrets.SSH_PASS }}
