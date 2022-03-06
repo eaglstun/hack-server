@@ -40,5 +40,5 @@ jobs:
       - name: debug config
         run: cat ~/.ssh/config
 
-      # - name: ssh into server and create test directoy
-      #   run: ssh prod 'touch hello.txt'
+      - name: ssh into server
+        run: ssh prod
