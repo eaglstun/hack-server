@@ -41,9 +41,8 @@ jobs:
           echo 'echo $SSH_PASS' > ~/.ssh_askpass && chmod +x ~/.ssh_askpass
           echo "Running ssh-add" | SSH_ASKPASS=~/.ssh_askpass DISPLAY= ssh-add ~/.ssh/prod.key
           ssh prod 'groups'
-          ssh prod 'cd /var/www/srv/test && git clone https://github.com/eaglstun/hack-server.git'
-          ssh prod 'pwd'
-          ssh prod 'composer install'
+          ssh prod 'cd /var/www/srv/hack && git fetch && git reset --hard origin/master'
+          ssh prod 'cd /var/www/srv/hack && composer install'
         env:
           SSH_AUTH_SOCK: /tmp/ssh_agent.sock
           SSH_PASS: ${{ secrets.SSH_PASS }}
